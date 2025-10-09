@@ -40,6 +40,14 @@ export default function BabListPage() {
   return (
     <div className="min-h-screen bg-white px-4 py-8">
       <div className="max-w-2xl mx-auto">
+        <div className="flex justify-end">
+          <button
+            className="bg-red-600 p-2 rounded-xl"
+            onClick={() => router.push("/pushrank")}
+          >
+            Pushrank
+          </button>
+        </div>
         <h1 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-400 bg-clip-text text-transparent">
           📚 Daftar Bab
         </h1>
