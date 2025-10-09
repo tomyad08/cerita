@@ -61,6 +61,7 @@ export default function Page() {
       [nomor]: pilihan,
     }));
 
+    // Pindah otomatis ke soal berikutnya
     if (currentIndex < data.length - 1) {
       setTimeout(() => {
         setCurrentIndex((i) => i + 1);
@@ -105,7 +106,7 @@ export default function Page() {
 
   if (!data || data.length === 0) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-blue-100 text-gray-700">
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-200 via-sky-100 to-pink-100 text-gray-700">
         <p>Memuat soal...</p>
       </div>
     );
@@ -115,28 +116,28 @@ export default function Page() {
   const { benar, totalSkor } = calculateScore();
   const scorePercent = Math.round((totalSkor / (data.length * 10)) * 100);
 
-  // === Tampilan Utama ===
   return (
-    <div className="flex justify-center min-h-screen items-start bg-blue-100 p-6 relative">
+    <div className="flex justify-center min-h-screen items-start bg-gradient-to-br from-purple-300 via-sky-200 to-pink-200 p-6 relative font-[Poppins]">
       <div className="flex-1 max-w-2xl w-full">
-        <div className="bg-white p-6 rounded-xl drop-shadow-xl relative">
+        <div className="bg-white/60 backdrop-blur-md p-6 rounded-2xl drop-shadow-2xl border border-white/30 relative">
           {/* Header */}
-          <div className="flex justify-end items-center mb-4">
-            <div className="flex items-center gap-3">
-              {!showScore && (
-                <>
-                  <div className="px-3 py-1 bg-blue-500 text-white rounded-xl text-xs">
-                    {formatTime(timeLeft)}
-                  </div>
-                  <button
-                    onClick={handleHint}
-                    className="px-3 py-1 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl font-semibold text-xs shadow"
-                  >
-                    Hint
-                  </button>
-                </>
-              )}
-            </div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold text-gray-800">
+              Soal {currentIndex + 1}
+            </h2>
+            {!showScore && (
+              <div className="flex items-center gap-3">
+                <div className="px-3 py-1 bg-indigo-500 text-white rounded-xl text-xs shadow">
+                  {formatTime(timeLeft)}
+                </div>
+                <button
+                  onClick={handleHint}
+                  className="px-3 py-1 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl font-semibold text-xs shadow"
+                >
+                  Hint
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Gambar Soal */}
@@ -145,23 +146,24 @@ export default function Page() {
               <img
                 src={soal.gambar}
                 alt={`Soal ${soal.nomor}`}
-                className="max-h-48 rounded-lg"
+                className="max-h-48 rounded-lg shadow-md"
               />
             </div>
           )}
 
           {/* Teks Soal */}
-          <div className="p-2 text-black rounded-xl mb-4">
+          <div className="p-2 text-black rounded-xl mb-4 bg-white/50">
             <LatexRenderer text={soal.soal} />
           </div>
 
           {/* Pilihan Jawaban */}
-          {["A", "B", "C", "D", "E"].map((pilihan) => {
+          {["A", "B", "C", "D", "E"].map((pilihan, index) => {
+            const uniqueName = `soal-${currentIndex}`; // ✅ Unik per soal
             const isSelected = selectedAnswers[soal.nomor] === pilihan;
             const isCorrect = soal.jawaban === pilihan;
 
             // Warna saat review
-            let bgColor = "hover:bg-sky-100";
+            let bgColor = "hover:bg-indigo-100";
             if (showScore) {
               if (isCorrect) bgColor = "bg-green-300";
               else if (isSelected && !isCorrect) bgColor = "bg-red-300";
@@ -172,11 +174,11 @@ export default function Page() {
             return (
               <label
                 key={pilihan}
-                className={`flex items-center gap-2 m-2 p-2 text-black rounded-xl cursor-pointer transition-all ${bgColor}`}
+                className={`flex items-center gap-2 m-2 p-3 text-black rounded-xl cursor-pointer transition-all duration-200 ${bgColor}`}
               >
                 <input
                   type="radio"
-                  name={`soal-${soal.nomor}`}
+                  name={uniqueName}
                   value={pilihan}
                   checked={isSelected}
                   disabled={showScore}
@@ -193,18 +195,18 @@ export default function Page() {
               <button
                 onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
                 disabled={currentIndex === 0}
-                className="px-4 py-2 rounded-xl bg-gray-300 text-black disabled:opacity-50"
+                className="px-4 py-2 rounded-xl bg-gray-300 text-black font-semibold disabled:opacity-50 shadow"
               >
-                Back
+                ⬅ Back
               </button>
               <button
                 onClick={() =>
                   setCurrentIndex((i) => Math.min(data.length - 1, i + 1))
                 }
                 disabled={currentIndex === data.length - 1}
-                className="px-4 py-2 rounded-xl bg-sky-600 text-white disabled:opacity-50"
+                className="px-4 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-semibold shadow disabled:opacity-50"
               >
-                Next
+                Next ➡
               </button>
             </div>
           )}
@@ -214,7 +216,7 @@ export default function Page() {
             <div className="flex justify-center mt-6">
               <button
                 onClick={handleRestart}
-                className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold shadow"
+                className="px-6 py-2 bg-gradient-to-r from-green-500 to-lime-400 hover:opacity-90 text-white rounded-xl font-bold shadow-lg"
               >
                 🔁 Ulangi Tes
               </button>
@@ -225,8 +227,8 @@ export default function Page() {
 
       {/* Popup Score */}
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-xl text-center w-80 animate-fadeIn">
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white/80 backdrop-blur-md p-6 rounded-xl shadow-xl text-center w-80 animate-fadeIn border border-white/30">
             <h2 className="text-xl font-bold mb-2 text-gray-800">Hasil Tes</h2>
             <p className="text-lg font-semibold mb-3 text-gray-800">
               Skor: {totalSkor} ({scorePercent}%)
@@ -255,7 +257,7 @@ export default function Page() {
 
       {/* Popup Hint */}
       {showHint && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-xl shadow-lg w-96">
             <h2 className="text-lg font-bold text-gray-800 mb-3 text-center">
               💡 Hint
