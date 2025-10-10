@@ -13,6 +13,7 @@ export default function Page() {
   const [data, setData] = useState([]);
   const [showHint, setShowHint] = useState(false);
   const [hintCount, setHintCount] = useState(0);
+  const [answeredQuestions, setAnsweredQuestions] = useState([]);
 
   // === Fetch & Shuffle Data ===
   const fetchData = async () => {
@@ -30,6 +31,7 @@ export default function Page() {
       setTimeLeft(5 * 60);
       setCurrentIndex(0);
       setHintCount(0);
+      setAnsweredQuestions([]);
     } catch (error) {
       console.error("Terjadi kesalahan saat fetch data:", error);
     }
@@ -61,6 +63,11 @@ export default function Page() {
       [nomor]: pilihan,
     }));
 
+    // Tambahkan ke daftar soal yang dijawab jika belum ada
+    setAnsweredQuestions((prev) =>
+      prev.includes(nomor) ? prev : [...prev, nomor]
+    );
+
     // Pindah otomatis ke soal berikutnya
     if (currentIndex < data.length - 1) {
       setTimeout(() => {
@@ -73,12 +80,21 @@ export default function Page() {
 
   const calculateScore = () => {
     let benar = 0;
+    let dijawab = 0;
+
     data.forEach((soal) => {
-      if (selectedAnswers[soal.nomor] === soal.jawaban) benar++;
+      if (selectedAnswers[soal.nomor]) {
+        dijawab++;
+        if (selectedAnswers[soal.nomor] === soal.jawaban) benar++;
+      }
     });
+
     let totalSkor = benar * 10 - hintCount * 5;
     if (totalSkor < 0) totalSkor = 0;
-    return { benar, totalSkor };
+
+    const scorePercent = dijawab > 0 ? Math.round((benar / dijawab) * 100) : 0;
+
+    return { benar, dijawab, totalSkor, scorePercent };
   };
 
   const formatTime = (seconds) => {
@@ -93,6 +109,13 @@ export default function Page() {
     setShowScore(true);
     setShowPopup(true);
     setTimeout(() => setShowPopup(false), 8000);
+
+    // Filter hanya soal yang dijawab untuk mode review
+    const answeredOnly = data.filter((soal) =>
+      Object.keys(selectedAnswers).includes(soal.nomor.toString())
+    );
+    setData(answeredOnly);
+    setCurrentIndex(0);
   };
 
   const handleHint = () => {
@@ -113,8 +136,8 @@ export default function Page() {
   }
 
   const soal = data[currentIndex];
-  const { benar, totalSkor } = calculateScore();
-  const scorePercent = Math.round((totalSkor / (data.length * 10)) * 100);
+  const { benar, dijawab, totalSkor, scorePercent } = calculateScore();
+  const isAnswered = selectedAnswers[soal.nomor] !== undefined;
 
   return (
     <div className="flex justify-center min-h-screen items-start bg-gradient-to-br from-purple-300 via-sky-200 to-pink-200 p-6 relative font-[Poppins]">
@@ -157,14 +180,13 @@ export default function Page() {
           </div>
 
           {/* Pilihan Jawaban */}
-          {["A", "B", "C", "D", "E"].map((pilihan, index) => {
-            const uniqueName = `soal-${currentIndex}`; // ✅ Unik per soal
+          {["A", "B", "C", "D", "E"].map((pilihan) => {
+            const uniqueName = `soal-${currentIndex}`;
             const isSelected = selectedAnswers[soal.nomor] === pilihan;
             const isCorrect = soal.jawaban === pilihan;
 
-            // Warna saat review
             let bgColor = "hover:bg-indigo-100";
-            if (showScore) {
+            if (showScore && isAnswered) {
               if (isCorrect) bgColor = "bg-green-300";
               else if (isSelected && !isCorrect) bgColor = "bg-red-300";
             } else if (isSelected) {
@@ -234,7 +256,7 @@ export default function Page() {
               Skor: {totalSkor} ({scorePercent}%)
             </p>
             <p className="text-gray-700 font-semibold mb-2">
-              Jawaban Benar: {benar} dari {data.length}
+              Jawaban Benar: {benar} dari {dijawab} dijawab
             </p>
             <p className="text-gray-700 font-semibold mb-2">
               Hint digunakan: {hintCount}x
