@@ -1,47 +1,49 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
 import { listLink } from "@/utils/listLink";
 import { LatexRenderer } from "../novel/latexRender";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showScore, setShowScore] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(10 * 60);
-  const [panelOpen, setPanelOpen] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(7 * 60);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const [data, setData] = useState([]);
 
-  // Ambil data berdasarkan subjudul yang disimpan di sessionStorage
+  const router = useRouter();
+
+  // Ambil data user
+  const [nickname, setNickname] = useState("");
+  const [avatar, setAvatar] = useState("");
+
+  // Ambil data user dari sessionStorage
+  useEffect(() => {
+    const savedName = sessionStorage.getItem("nama_samaran") || "Anonymous";
+    const savedAvatar = sessionStorage.getItem("avatar") || null;
+    setNickname(savedName);
+    setAvatar(savedAvatar);
+  }, []);
+
+  // Ambil soal berdasarkan subjudul
   useEffect(() => {
     const fetchData = async () => {
       try {
         const selected = sessionStorage.getItem("select");
-
-        // Ambil data dari endpoint API
         const response = await fetch(listLink.TEST);
-        if (!response.ok) {
-          throw new Error("Gagal mengambil data dari API");
-        }
+        if (!response.ok) throw new Error("Gagal mengambil data");
 
         const result = await response.json();
+        if (!Array.isArray(result)) return;
 
-        // Pastikan result berupa array
-        if (!Array.isArray(result)) {
-          console.error("Response dari API bukan array!");
-          return;
-        }
-
-        // Filter data sesuai subjudul yang dipilih
         const filteredData = result.filter(
           (item) => item.subjudul === selected
         );
-
         setData(filteredData);
       } catch (error) {
-        console.error("Terjadi kesalahan saat fetch data:", error);
+        console.error("Fetch error:", error);
       }
     };
 
@@ -50,16 +52,8 @@ export default function Page() {
 
   // Timer
   useEffect(() => {
-    if (showScore) return;
-    if (timeLeft <= 0) {
-      setShowScore(true);
-      return;
-    }
-
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
+    if (showScore || timeLeft <= 0) return;
+    const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
     return () => clearInterval(timer);
   }, [timeLeft, showScore]);
 
@@ -89,13 +83,12 @@ export default function Page() {
   const handleSubmit = () => {
     setShowScore(true);
     setShowPopup(true);
-    setTimeout(() => setShowPopup(false), 10000);
+    setTimeout(() => setShowPopup(false), 9000);
   };
 
-  // Pastikan data sudah ada
   if (!data || data.length === 0) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-blue-100 text-gray-700">
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-pink-50 to-blue-50 text-gray-700">
         <p>Memuat soal...</p>
       </div>
     );
@@ -106,39 +99,54 @@ export default function Page() {
   const scorePercent = (score / data.length) * 100;
 
   return (
-    <div className="flex flex-col gap-2 md:flex-row justify-center min-h-screen items-start bg-blue-100 p-6 relative">
-      {/* Panel soal kiri */}
-      <div className="flex-1 w-full">
-        <div className="bg-white p-5 rounded-xl drop-shadow-xl">
-          <div className="flex justify-between items-center mb-4">
-            <div className="font-bold text-black">Soal {soal.nomor}</div>
-            <div className="px-3 py-1 bg-blue-500 text-white rounded-xl text-xs">
-              {formatTime(timeLeft)}
-            </div>
-          </div>
-
-          {/* Tampilkan gambar jika ada */}
-          {soal.gambar && (
-            <div className="mb-4 flex justify-center">
-              <img
-                src={soal.gambar}
-                alt={`Soal ${soal.nomor}`}
-                className="max-h-48 rounded-lg"
-              />
-            </div>
+    <div className="relative min-h-screen bg-gradient-to-b from-pink-50 to-blue-50 text-gray-800 p-5 md:p-10 flex flex-col items-center">
+      {/* Header user */}
+      <div className="w-full flex justify-between items-center mb-6">
+        <div className="flex items-center gap-3">
+          {avatar && (
+            <img
+              src={avatar}
+              alt="Avatar"
+              className="w-12 h-12 rounded-full border-2 border-sky-300 shadow-sm"
+            />
           )}
-
-          <div className="p-2 text-black rounded-xl mb-4">
-            <LatexRenderer text={soal.soal} />
+          <div>
+            <p className="text-gray-600 text-sm">Welcome back,</p>
+            <h2 className="font-bold text-lg text-sky-700">{nickname}</h2>
           </div>
+        </div>
 
+        <div className="bg-sky-500 text-white font-semibold px-3 py-1 rounded-xl text-sm shadow-md">
+          ⏱ {formatTime(timeLeft)}
+        </div>
+      </div>
+
+      {/* Kartu Soal */}
+      <div className="bg-white/90 backdrop-blur-sm w-full md:w-3/4 rounded-2xl shadow-xl p-6 md:p-8 text-black">
+        <h1 className="font-bold text-xl mb-3">Soal {soal.nomor}</h1>
+
+        {soal.gambar && (
+          <div className="flex justify-center mb-4">
+            <img
+              src={soal.gambar}
+              alt={`Soal ${soal.nomor}`}
+              className="max-h-60 rounded-lg shadow-md"
+            />
+          </div>
+        )}
+
+        <div className="mb-4 text-justify">
+          <LatexRenderer text={soal.soal} />
+        </div>
+
+        <div className="space-y-3">
           {["A", "B", "C", "D", "E"].map((pilihan) => (
             <label
               key={pilihan}
-              className={`flex items-center gap-2 m-2 p-2 text-black rounded-xl cursor-pointer ${
+              className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition ${
                 selectedAnswers[soal.nomor] === pilihan
-                  ? "bg-sky-200"
-                  : "hover:bg-sky-100"
+                  ? "bg-sky-100 border-sky-400"
+                  : "hover:bg-gray-50 border-gray-200"
               }`}
             >
               <input
@@ -151,107 +159,80 @@ export default function Page() {
               <LatexRenderer text={soal[`pilihan_${pilihan}`]} />
             </label>
           ))}
-
-          <div className="mt-3 font-semibold text-sm text-gray-700">
-            {showScore &&
-              (selectedAnswers[soal.nomor] === soal.jawaban
-                ? "✅ Benar"
-                : `❌ Salah (Kunci: ${soal.jawaban})`)}
-          </div>
-
-          {/* Tombol navigasi */}
-          <div className="flex justify-end gap-2 mt-6">
-            <button
-              onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
-              disabled={currentIndex === 0}
-              className="px-4 py-2 rounded-xl bg-gray-300 text-black disabled:opacity-50"
-            >
-              Back
-            </button>
-            <button
-              onClick={() =>
-                setCurrentIndex((i) => Math.min(data.length - 1, i + 1))
-              }
-              disabled={currentIndex === data.length - 1}
-              className="px-4 py-2 rounded-xl bg-sky-600 text-white disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Panel Kontrol */}
-      <div
-        className={`
-          bg-white drop-shadow-xl rounded-t-xl md:rounded-xl
-          transition-transform duration-300 ease-in-out
-          fixed md:static bottom-0 left-0 w-full md:w-1/4
-          ${panelOpen ? "translate-y-0" : "translate-y-[80%] md:translate-y-0"}
-        `}
-      >
-        <div
-          className="p-3 bg-sky-600 text-white font-bold text-center rounded-t-xl cursor-pointer md:cursor-default"
-          onClick={() => setPanelOpen(!panelOpen)}
-        >
-          {formatTime(timeLeft)}
         </div>
 
-        <div className="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
-          {/* Nomor soal indikator */}
-          <div className="gap-2 columns-5">
-            {data.map((soal) => (
-              <div
-                key={soal.nomor}
-                className={`p-2 rounded-xl text-center mb-2 drop-shadow cursor-pointer ${
-                  selectedAnswers[soal.nomor] ? "bg-green-300" : "bg-blue-300"
-                }`}
-                onClick={() => setCurrentIndex(soal.nomor - 1)}
+        {showScore && (
+          <div className="mt-4 text-sm font-semibold">
+            {selectedAnswers[soal.nomor] === soal.jawaban ? (
+              <p className="text-green-600">✅ Jawaban Benar</p>
+            ) : (
+              <p className="text-red-600">❌ Salah (Kunci: {soal.jawaban})</p>
+            )}
+            <div className="flex justify-end">
+              <button
+                className="bg-purple-200 text-black p-2 rounded-lg"
+                onClick={() => router.push("/list-bab")}
               >
-                {soal.nomor}
-              </div>
-            ))}
-          </div>
-
-          {/* Tombol Kirim */}
-          <div className="flex justify-center">
-            <button
-              onClick={handleSubmit}
-              className="w-5/12 bg-sky-800 text-white p-2 rounded-xl text-center font-bold drop-shadow cursor-pointer"
-            >
-              Kirim
-            </button>
-          </div>
-
-          {showScore && (
-            <div className="mt-4 text-center text-black font-bold text-lg">
-              Skor Kamu: {score} / {data.length}
+                Home
+              </button>
             </div>
-          )}
+          </div>
+        )}
+
+        {/* Navigasi Soal */}
+        <div className="flex justify-end gap-3 mt-6">
+          <button
+            onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
+            disabled={currentIndex === 0}
+            className="px-4 py-2 bg-gray-200 rounded-xl text-gray-700 disabled:opacity-50"
+          >
+            Back
+          </button>
+          <button
+            onClick={() =>
+              setCurrentIndex((i) => Math.min(data.length - 1, i + 1))
+            }
+            disabled={currentIndex === data.length - 1}
+            className="px-4 py-2 bg-sky-500 text-white rounded-xl shadow hover:scale-105 transition disabled:opacity-50"
+          >
+            Next
+          </button>
         </div>
       </div>
 
-      {/* Popup */}
+      {/* Tombol Kirim (pojok kanan bawah) */}
+      <button
+        onClick={handleSubmit}
+        className="fixed bottom-0 w-full mx-2 bg-gradient-to-r from-blue-500 to-sky-400 text-white font-bold px-6 py-3 rounded shadow-lg hover:scale-110 transition"
+      >
+        Kirim
+      </button>
+
+      {/* Popup Hasil */}
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-xl text-center w-80 animate-fadeIn">
-            <h2 className="text-xl font-bold mb-2 text-gray-800">Hasil Tes</h2>
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow-2xl text-center w-80 animate-fadeIn">
+            <h2 className="text-xl font-bold mb-2 text-gray-800">
+              🎯 Hasil Tes
+            </h2>
             <p className="text-lg font-semibold mb-3 text-gray-800">
               Skor Kamu: {score} / {data.length} ({Math.round(scorePercent)}%)
             </p>
             {scorePercent > 70 ? (
-              <div>
-                <p className="text-green-600 font-bold text-lg">
-                  🎉 Mantap! gacorr juga otak kamuu! 🐉✨
-                </p>
-              </div>
+              <p className="text-green-600 font-bold text-lg">
+                💥 Gacor abis, otakmu ngebul nih! 🔥
+              </p>
             ) : (
-              <div>
-                <p className="text-red-600 font-bold text-lg">
-                  😢🐉 Yah, kecill.. gak apa-apa. coba pelajari lagi yaaa..
-                </p>
-              </div>
+              <p className="text-red-600 font-bold text-lg">
+                😢 Belum maksimal, tapi semangat terus ya! 💪
+              </p>
             )}
+            <button
+              className="w-full bg-purple-200 text-black p-2 rounded-lg"
+              onClick={() => router.push("/list-bab")}
+            >
+              Home
+            </button>
             <p className="text-gray-500 mt-3 text-sm">
               (Popup akan tertutup otomatis)
             </p>
