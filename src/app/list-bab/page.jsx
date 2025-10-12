@@ -16,7 +16,10 @@ export default function BabListPage() {
 
   // Ambil data dari sessionStorage
   useEffect(() => {
-    const nama = sessionStorage.getItem("nama_samaran") || "Anonim";
+    const nama = sessionStorage.getItem("nama_samaran");
+    if (!nama) {
+      router.push("/");
+    }
     const avatarUrl =
       sessionStorage.getItem("avatar") ||
       "https://api.dicebear.com/7.x/bottts/svg?seed=default";

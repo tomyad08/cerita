@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { listLink } from "@/utils/listLink";
 import { LatexRenderer } from "../novel/latexRender";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -18,9 +19,12 @@ export default function Page() {
   // 🧑‍🚀 Tambahan: Ambil nama samaran & avatar dari session
   const [namaSamaran, setNamaSamaran] = useState("");
   const [avatar, setAvatar] = useState(null);
-
+  const router = useRouter();
   useEffect(() => {
-    const nama = sessionStorage.getItem("nama_samaran") || "Anonim";
+    const nama = sessionStorage.getItem("nama_samaran");
+    if (!nama) {
+      router.push("/");
+    }
     const avatarUrl =
       sessionStorage.getItem("avatar") ||
       "https://api.dicebear.com/7.x/bottts/svg?seed=default";
@@ -271,7 +275,10 @@ export default function Page() {
         {/* Tombol Ulangi Tes */}
         {showScore && currentIndex === data.length - 1 && (
           <div className="flex justify-between mt-6">
-            <button className="px-6 py-2 bg-gradient-to-l from-green-500 to-lime-400 hover:opacity-90 text-white rounded-xl font-bold shadow-lg">
+            <button
+              onClick={() => router.push("/list-bab")}
+              className="px-6 py-2 bg-gradient-to-l from-green-500 to-lime-400 hover:opacity-90 text-white rounded-xl font-bold shadow-lg"
+            >
               Home
             </button>
             <button

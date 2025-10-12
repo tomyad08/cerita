@@ -21,9 +21,12 @@ export default function Page() {
 
   // Ambil data user dari sessionStorage
   useEffect(() => {
-    const savedName = sessionStorage.getItem("nama_samaran") || "Anonymous";
+    const nama = sessionStorage.getItem("nama_samaran");
+    if (!nama) {
+      router.push("/");
+    }
     const savedAvatar = sessionStorage.getItem("avatar") || null;
-    setNickname(savedName);
+    setNickname(nama);
     setAvatar(savedAvatar);
   }, []);
 

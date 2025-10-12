@@ -18,7 +18,10 @@ export default function TeksDanVideo() {
   // Ambil subjudul dan data user dari sessionStorage
   useEffect(() => {
     const subjudulFromStorage = sessionStorage.getItem("select");
-    const nama = sessionStorage.getItem("nama_samaran") || "Anonim";
+    const nama = sessionStorage.getItem("nama_samaran");
+    if (!nama) {
+      router.push("/");
+    }
     const avatarUrl =
       sessionStorage.getItem("avatar") ||
       "https://api.dicebear.com/7.x/bottts/svg?seed=default";
