@@ -225,7 +225,7 @@ export default function Page() {
             if (isCorrect) bgColor = "bg-green-300";
             else if (isSelected && !isCorrect) bgColor = "bg-red-300";
           } else if (isSelected) {
-            bgColor = "bg-sky-200";
+            bgColor = "";
           }
 
           return (
