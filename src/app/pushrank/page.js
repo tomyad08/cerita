@@ -36,13 +36,36 @@ export default function Page() {
   // === Fetch & Shuffle Data ===
   const fetchData = async () => {
     try {
-      const response = await fetch(listLink.PUSHRANK);
-      if (!response.ok) throw new Error("Gagal mengambil data dari API");
+      // Ambil pilihan dari sessionStorage
+      const getpushrankChoice = sessionStorage.getItem("pushrankChoice");
+
+      // Tentukan link data berdasarkan pilihan
+      let linkdata = "";
+      if (getpushrankChoice === "BING") {
+        linkdata = listLink.PUSHRANK_BING;
+      } else if (getpushrankChoice === "TKA") {
+        linkdata = listLink.PUSHRANK_TKA;
+      } else {
+        throw new Error("Pilihan pushrank tidak valid atau belum diset");
+      }
+
+      // Lakukan fetch data
+      const response = await fetch(linkdata);
+
+      if (!response.ok) {
+        throw new Error("Gagal mengambil data dari API");
+      }
 
       const result = await response.json();
-      if (!Array.isArray(result)) throw new Error("Response bukan array");
 
+      if (!Array.isArray(result)) {
+        throw new Error("Response bukan array");
+      }
+
+      // Acak urutan data
       const shuffled = result.sort(() => Math.random() - 0.5);
+
+      // Set ulang semua state
       setData(shuffled);
       setSelectedAnswers({});
       setShowScore(false);

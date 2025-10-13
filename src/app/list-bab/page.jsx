@@ -3,7 +3,7 @@
 import { listLink } from "@/utils/listLink";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function BabListPage() {
   const [search, setSearch] = useState("");
@@ -53,6 +53,17 @@ export default function BabListPage() {
     router.push("/novel");
   };
 
+  const [showOptions, setShowOptions] = useState(false);
+
+  const handleSelect = (choice) => {
+    // Simpan pilihan ke sessionStorage
+    sessionStorage.setItem("pushrankChoice", choice);
+    // Tutup popup
+    setShowOptions(false);
+    // Arahkan ke halaman /pushrank
+    router.push("/pushrank");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-pink-50 flex items-center justify-center px-4 py-10">
       <motion.div
@@ -89,18 +100,48 @@ export default function BabListPage() {
             </div>
           </div>
         </div>
-        <div className="flex justify-end mb-8">
+        <div className="flex justify-end mb-8 relative">
+          {/* Tombol utama */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => router.push("/pushrank")}
+            onClick={() => setShowOptions(!showOptions)}
             className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-5 py-2 rounded-xl shadow-md hover:shadow-lg transition-all"
           >
             🚀 Pushrank
           </motion.button>
-        </div>
 
-        {/* Input Pencarian */}
+          {/* Popup pilihan */}
+          <AnimatePresence>
+            {showOptions && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute top-12 right-0 bg-white rounded-xl shadow-lg p-4 w-40 z-50"
+              >
+                <p className="text-gray-700 font-semibold mb-2 text-center">
+                  Pilih Mode:
+                </p>
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => handleSelect("TKA")}
+                    className="px-4 py-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium transition-all"
+                  >
+                    TKA
+                  </button>
+                  <button
+                    onClick={() => handleSelect("BING")}
+                    className="px-4 py-2 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-700 font-medium transition-all"
+                  >
+                    BING
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        ){/* Input Pencarian */}
         <div className="relative mb-8">
           <input
             type="text"
@@ -117,7 +158,6 @@ export default function BabListPage() {
             {filteredData.length} hasil
           </motion.span>
         </div>
-
         {/* Daftar Bab */}
         <div className="space-y-4">
           {loading ? (
