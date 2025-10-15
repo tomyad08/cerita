@@ -237,7 +237,7 @@ export default function Page() {
         )}
 
         {/* Teks Soal */}
-        <div className="p-3 text-black rounded-xl mb-4 bg-white/60">
+        <div className="p-3 text-black text-justify rounded-xl mb-4 bg-white/60">
           <LatexRenderer text={soal.soal} />
         </div>
 
