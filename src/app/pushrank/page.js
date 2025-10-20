@@ -15,6 +15,7 @@ export default function Page() {
   const [showHint, setShowHint] = useState(false);
   const [hintCount, setHintCount] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
+  const [nilai, setNilai] = useState(0);
 
   // 🧑‍🚀 Tambahan: Ambil nama samaran & avatar dari session
   const [namaSamaran, setNamaSamaran] = useState("");
@@ -45,6 +46,8 @@ export default function Page() {
         linkdata = listLink.PUSHRANK_BING;
       } else if (getpushrankChoice === "TKA") {
         linkdata = listLink.PUSHRANK_TKA;
+      } else if (getpushrankChoice === "PENALARAN") {
+        linkdata = listLink.PUSHRANK_PENALARAN;
       } else {
         throw new Error("Pilihan pushrank tidak valid atau belum diset");
       }
@@ -69,7 +72,7 @@ export default function Page() {
       setData(shuffled);
       setSelectedAnswers({});
       setShowScore(false);
-      setTimeLeft(5 * 60);
+      setTimeLeft(1 * 60);
       setCurrentIndex(0);
       setHintCount(0);
       setAnsweredQuestions([]);
@@ -129,6 +132,7 @@ export default function Page() {
     });
 
     let totalSkor = benar * 10 - hintCount * 5;
+
     if (totalSkor < 0) totalSkor = 0;
 
     const scorePercent = dijawab > 0 ? Math.round((benar / dijawab) * 100) : 0;
@@ -144,10 +148,19 @@ export default function Page() {
     return `${m}:${s}`;
   };
 
-  const handleAutoSubmit = () => {
+  const handleAutoSubmit = async () => {
+    const { totalSkor } = calculateScore();
+    const fd = new FormData();
+    fd.append("nama_samaran", namaSamaran);
+    fd.append("nilai", totalSkor);
+
+    await fetch(listLink.NILAI, {
+      method: "POST",
+      body: fd,
+    });
     setShowScore(true);
     setShowPopup(true);
-    setTimeout(() => setShowPopup(false), 8000);
+    setTimeout(() => setShowPopup(false), 5000);
 
     const answeredOnly = data.filter((soal) =>
       Object.keys(selectedAnswers).includes(soal.nomor.toString())

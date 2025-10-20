@@ -10,11 +10,11 @@ export default function BabListPage() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [namaSamaran, setNamaSamaran] = useState("");
-  const [avatar, setAvatar] = useState(null); // ✅ ubah default ke null
+  const [avatar, setAvatar] = useState(null);
+  const [nilai, setNilai] = useState("0");
 
   const router = useRouter();
 
-  // Ambil data dari sessionStorage
   useEffect(() => {
     const nama = sessionStorage.getItem("nama_samaran");
     if (!nama) {
@@ -26,6 +26,29 @@ export default function BabListPage() {
 
     setNamaSamaran(nama);
     setAvatar(avatarUrl);
+
+    const fetchData = async () => {
+      try {
+        const res = await fetch(listLink.NILAI);
+        const data = await res.json();
+
+        // Filter data berdasarkan nama yang sama
+        const nilaiSiswa = data.filter((item) => item.nama_samaran === nama);
+
+        // Jumlahkan semua nilai siswa tersebut
+        const totalPoint = nilaiSiswa.reduce(
+          (sum, item) => sum + Number(item.nilai || 0),
+          0
+        );
+
+        // Simpan hasil ke state
+        setNilai(totalPoint);
+      } catch (err) {
+        console.error("Gagal fetch data:", err);
+      }
+    };
+
+    fetchData();
   }, []);
 
   // Fetch list bab
@@ -89,9 +112,12 @@ export default function BabListPage() {
 
             <div>
               <h1 className="text-2xl font-semibold text-gray-700">
-                👋 Welcome,{" "}
+                👋 Welcome,
                 <span className="font-bold bg-gradient-to-r from-blue-600 to-pink-500 bg-clip-text text-transparent">
                   {namaSamaran}
+                </span>
+                <span className="bg-pink-300 rounded-full p-2 text-sm mb-2 mx-2 font-bold">
+                  {nilai}
                 </span>
               </h1>
               <p className="text-sm text-gray-500">
@@ -135,6 +161,12 @@ export default function BabListPage() {
                     className="px-4 py-2 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-700 font-medium transition-all"
                   >
                     BING
+                  </button>
+                  <button
+                    onClick={() => handleSelect("PENALARAN")}
+                    className="px-4 py-2 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-700 font-medium transition-all"
+                  >
+                    PENALARAN
                   </button>
                 </div>
               </motion.div>
