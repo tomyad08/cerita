@@ -72,7 +72,7 @@ export default function Page() {
       setData(shuffled);
       setSelectedAnswers({});
       setShowScore(false);
-      setTimeLeft(5 * 60);
+      setTimeLeft(1 * 60);
       setCurrentIndex(0);
       setHintCount(0);
       setAnsweredQuestions([]);
@@ -150,6 +150,8 @@ export default function Page() {
 
   const handleAutoSubmit = async () => {
     const { totalSkor } = calculateScore();
+    setShowScore(true);
+    setShowPopup(true);
     const fd = new FormData();
     fd.append("nama_samaran", namaSamaran);
     fd.append("nilai", totalSkor);
@@ -158,8 +160,8 @@ export default function Page() {
       method: "POST",
       body: fd,
     });
-    setShowScore(true);
-    setShowPopup(true);
+    // setShowScore(true);
+    // setShowPopup(true);
     setTimeout(() => setShowPopup(false), 5000);
 
     const answeredOnly = data.filter((soal) =>
