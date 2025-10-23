@@ -12,6 +12,8 @@ export default function BabListPage() {
   const [namaSamaran, setNamaSamaran] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [nilai, setNilai] = useState("0");
+  const [kasta, setKasta] = useState([]);
+  const [ranking, setRanking] = useState([]);
 
   const router = useRouter();
 
@@ -31,18 +33,32 @@ export default function BabListPage() {
       try {
         const res = await fetch(listLink.NILAI);
         const data = await res.json();
+        setKasta(data);
 
-        // Filter data berdasarkan nama yang sama
-        const nilaiSiswa = data.filter((item) => item.nama_samaran === nama);
+        // 💡 Hitung total nilai per nama
+        const totalPerNama = data.reduce((acc, item) => {
+          const nama = item.nama_samaran?.trim();
+          const nilai = Number(item.nilai || 0);
+          acc[nama] = (acc[nama] || 0) + nilai;
+          return acc;
+        }, {});
 
-        // Jumlahkan semua nilai siswa tersebut
-        const totalPoint = nilaiSiswa.reduce(
-          (sum, item) => sum + Number(item.nilai || 0),
-          0
-        );
+        // 💡 Ubah jadi array dan urutkan dari tertinggi
+        const sortedRanking = Object.entries(totalPerNama)
+          .map(([nama, total]) => ({
+            nama,
+            total,
+            avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(
+              nama
+            )}`,
+          }))
+          .sort((a, b) => b.total - a.total);
 
-        // Simpan hasil ke state
-        setNilai(totalPoint);
+        setRanking(sortedRanking);
+
+        // 💡 Hitung total nilai user aktif
+        const nilaiSiswa = totalPerNama[nama] || 0;
+        setNilai(nilaiSiswa);
       } catch (err) {
         console.error("Gagal fetch data:", err);
       }
@@ -79,11 +95,8 @@ export default function BabListPage() {
   const [showOptions, setShowOptions] = useState(false);
 
   const handleSelect = (choice) => {
-    // Simpan pilihan ke sessionStorage
     sessionStorage.setItem("pushrankChoice", choice);
-    // Tutup popup
     setShowOptions(false);
-    // Arahkan ke halaman /pushrank
     router.push("/pushrank");
   };
 
@@ -98,7 +111,6 @@ export default function BabListPage() {
         {/* Header User */}
         <div className="flex items-center justify-between mb-1">
           <div className="flex items-center space-x-4">
-            {/* ✅ Render avatar hanya jika src valid */}
             {avatar && (
               <motion.img
                 src={avatar}
@@ -109,7 +121,6 @@ export default function BabListPage() {
                 transition={{ type: "spring", stiffness: 120 }}
               />
             )}
-
             <div>
               <h1 className="text-2xl font-semibold text-gray-700">
                 👋 Welcome,
@@ -126,8 +137,9 @@ export default function BabListPage() {
             </div>
           </div>
         </div>
+
+        {/* Tombol Pushrank */}
         <div className="flex justify-end mb-8 relative">
-          {/* Tombol utama */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -137,7 +149,6 @@ export default function BabListPage() {
             🚀 Pushrank
           </motion.button>
 
-          {/* Popup pilihan */}
           <AnimatePresence>
             {showOptions && (
               <motion.div
@@ -164,7 +175,7 @@ export default function BabListPage() {
                   </button>
                   <button
                     onClick={() => handleSelect("PENALARAN")}
-                    className="px-4 py-2 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-700 font-medium transition-all"
+                    className="px-4 py-2 rounded-lg bg-pink-100 hover:bg-pink-200 text-pink-700 font-medium transition-all"
                   >
                     PENALARAN
                   </button>
@@ -173,7 +184,51 @@ export default function BabListPage() {
             )}
           </AnimatePresence>
         </div>
-        ){/* Input Pencarian */}
+
+        {/* ⚡️ Top 5 Ranking */}
+        <div className="mb-10">
+          <h2 className="text-xl font-bold text-gray-700 mb-4">
+            🏆 Top 5 Kasta
+          </h2>
+          {ranking.length === 0 ? (
+            <p className="text-gray-500 text-sm italic">
+              Sedang menghitung kasta...
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {ranking.slice(0, 5).map((r, i) => (
+                <motion.div
+                  key={r.nama}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className={`flex items-center justify-between p-3 rounded-xl ${
+                    r.nama === namaSamaran
+                      ? "bg-yellow-100 border-2 border-yellow-300"
+                      : "bg-white border border-gray-100"
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <span className="font-bold text-lg text-gray-600 w-6 text-center">
+                      #{i + 1}
+                    </span>
+                    <img
+                      src={r.avatar}
+                      alt={r.nama}
+                      className="w-8 h-8 rounded-full border border-gray-300"
+                    />
+                    <span className="font-semibold text-gray-700 truncate max-w-[120px]">
+                      {r.nama}
+                    </span>
+                  </div>
+                  <span className="text-gray-600 font-medium">{r.total}</span>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Input Pencarian */}
         <div className="relative mb-8">
           <input
             type="text"
@@ -190,6 +245,7 @@ export default function BabListPage() {
             {filteredData.length} hasil
           </motion.span>
         </div>
+
         {/* Daftar Bab */}
         <div className="space-y-4">
           {loading ? (
