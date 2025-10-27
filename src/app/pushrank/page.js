@@ -69,7 +69,7 @@ export default function Page() {
       setData(shuffled);
       setSelectedAnswers({});
       setShowScore(false);
-      setTimeLeft(1 * 60);
+      setTimeLeft(6 * 60);
       setCurrentIndex(0);
       setHintCount(0);
       setAnsweredQuestions([]);
