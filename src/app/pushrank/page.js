@@ -15,7 +15,6 @@ export default function Page() {
   const [showHint, setShowHint] = useState(false);
   const [hintCount, setHintCount] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
-  const [nilai, setNilai] = useState(0);
 
   // 🧑‍🚀 Tambahan: Ambil nama samaran & avatar dari session
   const [namaSamaran, setNamaSamaran] = useState("");
@@ -65,14 +64,12 @@ export default function Page() {
         throw new Error("Response bukan array");
       }
 
-      // Acak urutan data
       const shuffled = result.sort(() => Math.random() - 0.5);
 
-      // Set ulang semua state
       setData(shuffled);
       setSelectedAnswers({});
       setShowScore(false);
-      setTimeLeft(6 * 60);
+      setTimeLeft(1 * 60);
       setCurrentIndex(0);
       setHintCount(0);
       setAnsweredQuestions([]);
@@ -85,7 +82,6 @@ export default function Page() {
     fetchData();
   }, []);
 
-  // === Timer ===
   useEffect(() => {
     if (showScore) return;
     if (timeLeft <= 0) {
@@ -122,22 +118,27 @@ export default function Page() {
 
   const calculateScore = () => {
     let benar = 0;
+    let salah = 0;
     let dijawab = 0;
 
+    // Hanya hitung soal yang dijawab
     data.forEach((soal) => {
-      if (selectedAnswers[soal.nomor]) {
-        dijawab++;
-        if (selectedAnswers[soal.nomor] === soal.jawaban) benar++;
-      }
+      const jawabanUser = selectedAnswers[soal.nomor];
+      if (!jawabanUser) return; // langsung skip kalau undefined/null/""
+
+      dijawab++;
+      if (jawabanUser === soal.jawaban) benar++;
+      else salah++;
     });
 
-    let totalSkor = benar * 10 - hintCount * 5;
-
+    // Skor: benar +10, salah -10, tiap hint -5
+    let totalSkor = benar * 10 - salah * 10 - hintCount * 5;
     if (totalSkor < 0) totalSkor = 0;
 
+    // Persentase berdasarkan jumlah yang dijawab
     const scorePercent = dijawab > 0 ? Math.round((benar / dijawab) * 100) : 0;
 
-    return { benar, dijawab, totalSkor, scorePercent };
+    return { benar, salah, dijawab, totalSkor, scorePercent };
   };
 
   const formatTime = (seconds) => {
@@ -189,7 +190,7 @@ export default function Page() {
   }
 
   const soal = data[currentIndex];
-  const { benar, dijawab, totalSkor, scorePercent } = calculateScore();
+  const { benar, salah, totalSkor, scorePercent } = calculateScore();
   const isAnswered = selectedAnswers[soal.nomor] !== undefined;
 
   return (
@@ -337,8 +338,11 @@ export default function Page() {
             <p className="text-lg font-semibold mb-3 text-gray-800">
               Skor: {totalSkor} ({scorePercent}%)
             </p>
-            <p className="text-gray-700 font-semibold mb-2">
-              Jawaban Benar: {benar} dari {dijawab}
+            <p className="text-gray-700 font-semibold mb-1">
+              Jawaban Benar: {benar}
+            </p>
+            <p className="text-gray-700 font-semibold mb-1">
+              Jawaban Salah: {salah}
             </p>
             <p className="text-gray-700 font-semibold mb-2">
               Hint digunakan: {hintCount}x
