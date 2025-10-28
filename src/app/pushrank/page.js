@@ -121,21 +121,17 @@ export default function Page() {
     let salah = 0;
     let dijawab = 0;
 
-    // Hanya hitung soal yang dijawab
     data.forEach((soal) => {
       const jawabanUser = selectedAnswers[soal.nomor];
-      if (!jawabanUser) return; // langsung skip kalau undefined/null/""
+      if (!jawabanUser) return;
 
       dijawab++;
       if (jawabanUser === soal.jawaban) benar++;
       else salah++;
     });
 
-    // Skor: benar +10, salah -10, tiap hint -5
-    let totalSkor = benar * 10 - salah * 10 - hintCount * 5;
+    let totalSkor = benar * 10 - salah * 5 - hintCount * 2;
     if (totalSkor < 0) totalSkor = 0;
-
-    // Persentase berdasarkan jumlah yang dijawab
     const scorePercent = dijawab > 0 ? Math.round((benar / dijawab) * 100) : 0;
 
     return { benar, salah, dijawab, totalSkor, scorePercent };
@@ -221,7 +217,7 @@ export default function Page() {
       </div>
 
       {/* Kartu Soal */}
-      <div className="flex-1 max-w-2xl w-full bg-white/70 backdrop-blur-md p-6 rounded-2xl border border-white/30 shadow-xl">
+      <div className="relative flex-1 max-w-2xl w-full bg-white/70 backdrop-blur-md p-6 rounded-2xl border border-white/30 shadow-xl">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-gray-800">
             Soal {currentIndex + 1}
@@ -288,6 +284,22 @@ export default function Page() {
             </label>
           );
         })}
+
+        {/* Tombol Skip */}
+        {!showScore && (
+          <button
+            onClick={() => {
+              if (currentIndex < data.length - 1) {
+                setCurrentIndex((i) => i + 1);
+              } else {
+                handleAutoSubmit();
+              }
+            }}
+            className="absolute bottom-4 right-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-semibold text-sm shadow transition-all duration-200"
+          >
+            ⏭ Skip
+          </button>
+        )}
 
         {/* Navigasi saat review */}
         {showScore && (
