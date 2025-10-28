@@ -186,6 +186,7 @@ export default function BabListPage() {
         </div>
 
         {/* ⚡️ Top 5 Ranking */}
+        {/* ⚡️ Top 5 Ranking */}
         <div className="mb-10">
           <h2 className="text-xl font-bold text-gray-700 mb-4">
             🏆 Top 5 Kasta
@@ -195,35 +196,66 @@ export default function BabListPage() {
               Sedang menghitung kasta...
             </p>
           ) : (
-            <div className="space-y-2">
-              {ranking.slice(0, 5).map((r, i) => (
-                <motion.div
-                  key={r.nama}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className={`flex items-center justify-between p-3 rounded-xl ${
-                    r.nama === namaSamaran
-                      ? "bg-yellow-100 border-2 border-yellow-300"
-                      : "bg-white border border-gray-100"
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <span className="font-bold text-lg text-gray-600 w-6 text-center">
-                      #{i + 1}
-                    </span>
-                    <img
-                      src={r.avatar}
-                      alt={r.nama}
-                      className="w-8 h-8 rounded-full border border-gray-300"
-                    />
-                    <span className="font-semibold text-gray-700 truncate max-w-[120px]">
-                      {r.nama}
-                    </span>
-                  </div>
-                  <span className="text-gray-600 font-medium">{r.total}</span>
-                </motion.div>
-              ))}
+            <div className="space-y-3">
+              {ranking.slice(0, 5).map((r, i) => {
+                const rank = i + 1;
+
+                // Tentukan ukuran avatar berdasarkan peringkat
+                const sizeMap = {
+                  1: "w-14 h-14",
+                  2: "w-12 h-12",
+                  3: "w-10 h-10",
+                  4: "w-9 h-9",
+                  5: "w-8 h-8",
+                };
+                const avatarSize = sizeMap[rank] || "w-8 h-8";
+
+                // Tentukan medali berdasarkan ranking
+                const medal =
+                  rank === 1
+                    ? "🥇"
+                    : rank === 2
+                    ? "🥈"
+                    : rank === 3
+                    ? "🥉"
+                    : "";
+
+                // Warna latar dinamis
+                const bgClass =
+                  r.nama === namaSamaran
+                    ? "bg-yellow-100 border-2 border-yellow-300"
+                    : "bg-white border border-gray-100";
+
+                return (
+                  <motion.div
+                    key={r.nama}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className={`flex items-center justify-between p-3 rounded-xl ${bgClass}`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <span className="font-bold text-lg text-gray-600 w-7 text-center">
+                        #{rank}
+                      </span>
+
+                      <img
+                        src={r.avatar}
+                        alt={r.nama}
+                        className={`${avatarSize} rounded-full border border-gray-300 shadow-sm`}
+                      />
+
+                      <div className="flex items-center space-x-1">
+                        {medal && <span className="text-lg">{medal}</span>}
+                        <span className="font-semibold text-gray-700 truncate max-w-[120px]">
+                          {r.nama}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-gray-600 font-medium">{r.total}</span>
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </div>
