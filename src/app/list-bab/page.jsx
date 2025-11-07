@@ -12,8 +12,8 @@ export default function BabListPage() {
   const [namaSamaran, setNamaSamaran] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [nilai, setNilai] = useState("0");
-  const [kasta, setKasta] = useState([]);
   const [ranking, setRanking] = useState([]);
+  const [click, setClick] = useState(true);
 
   const router = useRouter();
 
@@ -33,7 +33,6 @@ export default function BabListPage() {
       try {
         const res = await fetch(listLink.NILAI);
         const data = await res.json();
-        setKasta(data);
 
         // 💡 Hitung total nilai per nama
         const totalPerNama = data.reduce((acc, item) => {
@@ -108,6 +107,78 @@ export default function BabListPage() {
         transition={{ duration: 0.6 }}
         className="w-full max-w-3xl backdrop-blur-lg bg-white/70 shadow-xl border border-white/40 rounded-3xl p-8"
       >
+        {/* Hero Banner */}
+        {/* {click ? (
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              className="mb-8 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 p-4 rounded-3xl shadow-md text-center"
+            >
+              <div
+                className="flex justify-end text-black font-bold"
+                onClick={() => setClick(false)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  fill="red"
+                  className="bi bi-x-circle"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                </svg>
+              </div>
+              <div className="p-4">
+                <h1 className="md:text-3xl text-lg font-extrabold text-gray-800 mb-2 text-center">
+                  Berani Uji Nalarmu? 💣
+                </h1>
+
+                <p className="text-gray-700 max-w-xl mx-auto text-justify">
+                  Ikuti{" "}
+                  <span className="font-semibold text-blue-700">
+                    kelas penalaran umum online
+                  </span>{" "}
+                  gratis, seru, dan bikin otakmu kerja lembur dengan cara
+                  menyenangkan. Siap tantang logikamu?
+                </p>
+
+                <div className="text-start mt-4 text-sm text-gray-600">
+                  📅{" "}
+                  <span className="font-semibold">Senin, 27 Oktober 2025</span>{" "}
+                  <br />
+                  🕗 Pukul{" "}
+                  <span className="font-semibold">20.00 – 21.30 WIB</span>{" "}
+                  <br />
+                  📍 Melalui{" "}
+                  <span className="font-semibold text-green-700">
+                    Google Meet
+                  </span>
+                </div>
+
+                <button
+                  className="mt-5 w-full py-3 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 
+  text-white font-bold rounded-xl shadow-md hover:shadow-lg hover:scale-[1.03] 
+  transition-all duration-300"
+                >
+                  🚀 Daftar Sekarang
+                </button>
+              </div>
+
+              <img
+            src="/arena-hero.png"
+            alt="Arena Hero"
+            className="mx-auto mt-4 w-56 h-auto rounded-2xl shadow-lg"
+          />
+            </motion.div>
+          </div>
+        ) : (
+          ""
+        )} */}
+
         {/* Header User */}
         <div className="flex items-center justify-between mb-1">
           <div className="flex items-center space-x-4">

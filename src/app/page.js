@@ -88,11 +88,15 @@ export default function LoginPage() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative z-10 w-full max-w-md m-5 p-8 backdrop-blur-xl bg-white/80 border border-white/60 rounded-3xl shadow-[0_0_25px_rgba(147,197,253,0.4)]"
+            className="relative z-10 w-[90%] max-w-md m-5 p-8 backdrop-blur-xl bg-white/80 border border-white/60 rounded-3xl shadow-[0_0_25px_rgba(147,197,253,0.4)]"
           >
-            <h2 className="text-3xl font-extrabold text-center mb-6 tracking-tight bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              🌈 Welcome to The Arena
-            </h2>
+            <div className="flex justify-end">
+              <img src="logo_cerita.png" alt="" className="w-20 h-20" />
+
+              <h2 className="text-2xl font-extrabold text-center mb-6 tracking-tight bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                Welcome to The Arena
+              </h2>
+            </div>
 
             {/* Avatar Preview */}
             {form.namaSamaran.trim() && (
