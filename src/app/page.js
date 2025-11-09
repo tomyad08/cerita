@@ -91,7 +91,7 @@ export default function LoginPage() {
             className="relative z-10 w-[90%] max-w-md m-5 p-8 backdrop-blur-xl bg-white/80 border border-white/60 rounded-3xl shadow-[0_0_25px_rgba(147,197,253,0.4)]"
           >
             <div className="flex justify-end">
-              <img src="logo_cerita.png" alt="" className="w-20 h-20" />
+              <img src="logo_tulip_192x192.png" alt="" className="w-20 h-20" />
 
               <h2 className="text-2xl font-extrabold text-center mb-6 tracking-tight bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Welcome to The Arena
