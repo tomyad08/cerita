@@ -13,6 +13,7 @@ export default function Page() {
   const [showWinPopup, setShowWinPopup] = useState(false);
   const [data, setData] = useState([]);
   const [lives, setLives] = useState(20);
+  const [ask, setAsk] = useState(10);
   const [gameOver, setGameOver] = useState(false);
 
   const router = useRouter();
@@ -84,7 +85,7 @@ export default function Page() {
     // Jika salah → -2 nyawa
     if (pilihan !== soalSaatIni.jawaban) {
       setLives((prev) => {
-        const newLives = prev - 2;
+        const newLives = prev - 1;
         if (newLives <= 0) setGameOver(true);
         return Math.max(newLives, 0);
       });
@@ -110,7 +111,7 @@ export default function Page() {
             💀 GAME OVER!
           </h2>
           <p className="text-gray-800 mb-4 font-semibold">
-            Nyawamu habis… tapi bukan semangatmu. Besok GAS lagi kan?? 😎🔥
+            Nyawamu habis… tapi bukan semangatmu. Ayo GAS lagi kan?? 😎🔥
           </p>
           <button
             onClick={() => router.push("/list-bab")}
@@ -159,6 +160,20 @@ export default function Page() {
           <div className="bg-sky-600 text-white font-bold px-3 py-1 rounded-xl text-sm shadow-lg">
             ⏱ {formatTime(timeLeft)}
           </div>
+          <div className="flex bg-purple-500 text-white font-bold px-3 py-1 rounded-xl text-sm shadow-lg animate-pulse">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-person-raised-hand"
+              viewBox="0 0 16 16"
+            >
+              <path d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a1 1 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207" />
+              <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
+            </svg>
+            {ask}
+          </div>
 
           <div className="bg-red-500 text-white font-bold px-3 py-1 rounded-xl text-sm shadow-lg animate-pulse">
             ❤️ {lives}
@@ -174,17 +189,17 @@ export default function Page() {
           </h1>
 
           <div className="flex gap-2">
-            <div className="border px-3 py-1 rounded-xl text-sm">
+            <div className="border px-3 text-black py-1 rounded-xl text-sm">
               {soal.level}
             </div>
 
             <button
               onClick={() => {
                 setShowHint(true);
-                setLives((prev) => {
-                  const newLives = prev - 1;
-                  if (newLives <= 0) setGameOver(true);
-                  return Math.max(newLives, 0);
+                setAsk((prev) => {
+                  const newAsk = prev - 1;
+                  if (newAsk <= 0) setGameOver(true);
+                  return Math.max(newAsk, 0);
                 });
               }}
               className="px-3 py-1 bg-yellow-300 text-gray-700 rounded-lg shadow-md hover:scale-105 transition"
