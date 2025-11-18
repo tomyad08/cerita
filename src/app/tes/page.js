@@ -15,6 +15,7 @@ export default function Page() {
   const [lives, setLives] = useState(20);
   const [ask, setAsk] = useState(10);
   const [gameOver, setGameOver] = useState(false);
+  const [reviewSoal, setReviewSoal] = useState(null);
 
   const router = useRouter();
 
@@ -272,7 +273,7 @@ export default function Page() {
 
             <p className="text-lg font-semibold mb-3 text-gray-700">
               OYEEE!! Kamu ngelarin semua soal!!
-              <span className="text-purple-600">🔥🔥 GASIK PARAH!</span>
+              <span className="text-purple-600">🔥🔥 MANTAP PARAH!</span>
             </p>
 
             <p className="text-lg text-gray-700 font-bold">
@@ -284,7 +285,8 @@ export default function Page() {
               {data.map((s) => (
                 <div
                   key={s.nomor}
-                  className={`p-3 rounded-xl border ${
+                  onClick={() => setReviewSoal(s)}
+                  className={`p-3 rounded-xl border cursor-pointer hover:scale-[1.02] transition ${
                     selectedAnswers[s.nomor] === s.jawaban
                       ? "bg-green-100 border-green-400"
                       : "bg-red-100 border-red-400"
@@ -300,6 +302,61 @@ export default function Page() {
                   </p>
                 </div>
               ))}
+              {reviewSoal && (
+                <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+                  <div className="bg-white w-[90%] md:w-[60%] max-h-[85vh] overflow-y-auto p-6 rounded-2xl shadow-2xl animate-fadeIn">
+                    <h2 className="text-2xl font-extrabold text-purple-700 mb-4">
+                      🔍 Review Soal {reviewSoal.nomor}
+                    </h2>
+
+                    {/* Gambar */}
+                    {reviewSoal.gambar && (
+                      <div className="flex justify-center mb-4">
+                        <img
+                          src={reviewSoal.gambar}
+                          className="max-h-60 rounded-xl shadow-lg border"
+                        />
+                      </div>
+                    )}
+
+                    {/* Teks Soal */}
+                    <div className="mb-4 text-lg text-gray-800">
+                      <LatexRenderer text={reviewSoal.soal} />
+                    </div>
+
+                    {/* Pilihan Jawaban */}
+                    <div className="space-y-3">
+                      {["A", "B", "C", "D", "E"].map((p) => {
+                        const isUser = selectedAnswers[reviewSoal.nomor] === p;
+                        const isCorrect = reviewSoal.jawaban === p;
+
+                        return (
+                          <div
+                            key={p}
+                            className={`p-3 rounded-xl border ${
+                              isCorrect
+                                ? "bg-green-100 border-green-500"
+                                : isUser
+                                ? "bg-red-100 border-red-500"
+                                : "bg-gray-50"
+                            }`}
+                          >
+                            <strong>{p}.</strong>{" "}
+                            <LatexRenderer text={reviewSoal[`pilihan_${p}`]} />
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <button
+                      onClick={() => setReviewSoal(null)}
+                      className="mt-6 w-full bg-purple-300 p-2 rounded-lg shadow-md font-bold hover:scale-105 transition"
+                    >
+                      Tutup Review
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             <button
