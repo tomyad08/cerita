@@ -110,7 +110,7 @@ export default function Page() {
           <h2 className="text-3xl font-extrabold text-red-600 mb-3">
             💀 GAME OVER!
           </h2>
-          <p className="text-gray-800 mb-4 font-semibold">
+          <p className="text-black mb-4 font-semibold">
             Nyawamu habis… tapi bukan semangatmu. Ayo GAS lagi kan?? 😎🔥
           </p>
           <button
@@ -275,12 +275,12 @@ export default function Page() {
               <span className="text-purple-600">🔥🔥 GASIK PARAH!</span>
             </p>
 
-            <p className="text-lg font-bold">
+            <p className="text-lg text-gray-700 font-bold">
               Skor: {score} / {data.length} ({scorePercent}%)
             </p>
 
             {/* Detail per soal */}
-            <div className="text-left mt-5 space-y-2">
+            <div className="text-left text-gray-700 mt-5 space-y-2">
               {data.map((s) => (
                 <div
                   key={s.nomor}
