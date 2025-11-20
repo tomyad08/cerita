@@ -221,7 +221,7 @@ export default function Page() {
         )}
 
         {/* TEKS SOAL */}
-        <div className="mb-4 text-lg text-gray-800">
+        <div className="mb-4 text-lg text-justify text-gray-800">
           <LatexRenderer text={soal.soal} />
         </div>
 
@@ -320,7 +320,7 @@ export default function Page() {
                     )}
 
                     {/* Teks Soal */}
-                    <div className="mb-4 text-lg text-gray-800">
+                    <div className="mb-4 text-lg text-justify text-gray-800">
                       <LatexRenderer text={reviewSoal.soal} />
                     </div>
 
