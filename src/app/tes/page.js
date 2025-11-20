@@ -102,6 +102,29 @@ export default function Page() {
       }
     }, 500);
   };
+  // Kirim nilai otomatis ketika user menyelesaikan semua soal
+  useEffect(() => {
+    if (showWinPopup && nickname) {
+      const sendNilai = async () => {
+        try {
+          const fd = new FormData();
+          fd.append("nama_samaran", nickname);
+          fd.append("nilai", 300); // skor yang kamu mau kirim
+
+          await fetch(listLink.NILAI, {
+            method: "POST",
+            body: fd,
+          });
+
+          console.log("Nilai berhasil dikirim!");
+        } catch (error) {
+          console.error("Gagal mengirim nilai:", error);
+        }
+      };
+
+      sendNilai();
+    }
+  }, [showWinPopup, nickname]);
 
   // Jika nyawa habis → Game Over
   if (gameOver) {
