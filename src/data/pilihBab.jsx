@@ -11,4 +11,10 @@ exports.dataBab = [
     keterangan:
       "Menguji kemampuan untuk membanding, mengklasifikasi, dan memilih asumsi paling relevan.",
   },
+  {
+    id: 3,
+    bab: "Pola Bilangan",
+    keterangan:
+      "Menguji kemampuan untuk membanding, mengklasifikasi, dan memilih asumsi paling relevan.",
+  },
 ];
