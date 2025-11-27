@@ -12,10 +12,12 @@ export default function Page() {
   const [showHint, setShowHint] = useState(false);
   const [showWinPopup, setShowWinPopup] = useState(false);
   const [data, setData] = useState([]);
-  const [lives, setLives] = useState(20);
-  const [ask, setAsk] = useState(10);
+  const [lives, setLives] = useState(10);
+  const [ask, setAsk] = useState(5);
   const [gameOver, setGameOver] = useState(false);
   const [reviewSoal, setReviewSoal] = useState(null);
+  const [strikeCount, setStrikeCount] = useState(0);
+  const [showStrikePopup, setShowStrikePopup] = useState(false);
 
   const router = useRouter();
 
@@ -76,6 +78,7 @@ export default function Page() {
   // Handling select jawaban
   const handleSelect = (nomor, pilihan) => {
     const soalSaatIni = data[currentIndex];
+    const isCorrect = pilihan === soalSaatIni.jawaban;
 
     // Simpan jawaban
     setSelectedAnswers((prev) => ({
@@ -83,8 +86,33 @@ export default function Page() {
       [nomor]: pilihan,
     }));
 
-    // Jika salah → -2 nyawa
-    if (pilihan !== soalSaatIni.jawaban) {
+    // --- LOGIKA STRIKE ---
+    if (isCorrect) {
+      setStrikeCount((prev) => {
+        const newCount = prev + 1;
+
+        if (newCount === 5) {
+          // Aktifkan STRIKE
+          setShowStrikePopup(true);
+
+          // Bonus berdasarkan level
+          if (soalSaatIni.level === "easy") {
+            setAsk((prevAsk) => prevAsk + 0.5);
+          } else if (soalSaatIni.level === "medium") {
+            setLives((prevLives) => prevLives + 0.5);
+          } else if (soalSaatIni.level === "hard") {
+            setAsk((prevAsk) => prevAsk + 0.5);
+            setLives((prevLives) => prevLives + 0.5);
+          }
+
+          return 0; // reset setelah strike
+        }
+
+        return newCount;
+      });
+    } else {
+      // Jawaban salah → reset strike dan kurangi nyawa
+      setStrikeCount(0);
       setLives((prev) => {
         const newLives = prev - 1;
         if (newLives <= 0) setGameOver(true);
@@ -92,16 +120,16 @@ export default function Page() {
       });
     }
 
-    // Pindah otomatis ke soal berikutnya
+    // Pindah otomatis
     setTimeout(() => {
       if (currentIndex < data.length - 1) {
         setCurrentIndex((i) => i + 1);
       } else {
-        // MENANG! Soal terakhir tercapai
         setShowWinPopup(true);
       }
     }, 500);
   };
+
   // Kirim nilai otomatis ketika user menyelesaikan semua soal
   useEffect(() => {
     if (showWinPopup && nickname) {
@@ -387,6 +415,39 @@ export default function Page() {
               className="w-full bg-purple-300 p-2 mt-5 rounded-lg shadow-md font-bold hover:scale-105 transition"
             >
               Kembali ke Home
+            </button>
+          </div>
+        </div>
+      )}
+      {showStrikePopup && (
+        <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-[999]">
+          <div
+            className="relative bg-gradient-to-br from-yellow-300 via-orange-400 to-red-500 
+                    p-8 rounded-3xl shadow-2xl text-center animate-bounce-slow 
+                    border-4 border-white w-[90%] md:w-[450px]"
+          >
+            {/* Animasi confetti */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="animate-confetti absolute w-full h-full"></div>
+            </div>
+
+            <h1 className="text-5xl font-extrabold text-white drop-shadow-lg mb-3">
+              🎉 STRIKE!!! 🎉
+            </h1>
+
+            <p className="text-xl font-bold text-white drop-shadow">
+              Kamu menjawab 5 soal berturut-turut dengan benar!
+            </p>
+
+            <p className="text-lg text-purple-900 bg-white/70 mt-4 py-2 rounded-xl font-bold shadow">
+              Bonus sudah ditambahkan 🔥🔥🔥
+            </p>
+
+            <button
+              onClick={() => setShowStrikePopup(false)}
+              className="mt-5 bg-white text-orange-600 font-bold w-full py-2 rounded-xl shadow-lg hover:scale-105 transition"
+            >
+              GAS LAGI!
             </button>
           </div>
         </div>
