@@ -436,7 +436,7 @@ export default function Page() {
             </h1>
 
             <p className="text-xl font-bold text-white drop-shadow">
-              Kamu menjawab 5 soal berturut-turut dengan benar!
+              Kamu menjawab 3 soal berturut-turut dengan benar!
             </p>
 
             <p className="text-lg text-purple-900 bg-white/70 mt-4 py-2 rounded-xl font-bold shadow">
