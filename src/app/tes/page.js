@@ -12,8 +12,8 @@ export default function Page() {
   const [showHint, setShowHint] = useState(false);
   const [showWinPopup, setShowWinPopup] = useState(false);
   const [data, setData] = useState([]);
-  const [lives, setLives] = useState(10);
-  const [ask, setAsk] = useState(5);
+  const [lives, setLives] = useState(15);
+  const [ask, setAsk] = useState(7);
   const [gameOver, setGameOver] = useState(false);
   const [reviewSoal, setReviewSoal] = useState(null);
   const [strikeCount, setStrikeCount] = useState(0);
@@ -91,18 +91,18 @@ export default function Page() {
       setStrikeCount((prev) => {
         const newCount = prev + 1;
 
-        if (newCount === 5) {
+        if (newCount === 3) {
           // Aktifkan STRIKE
           setShowStrikePopup(true);
 
           // Bonus berdasarkan level
           if (soalSaatIni.level === "easy") {
-            setAsk((prevAsk) => prevAsk + 0.5);
+            setAsk((prevAsk) => prevAsk + 1);
           } else if (soalSaatIni.level === "medium") {
-            setLives((prevLives) => prevLives + 0.5);
+            setLives((prevLives) => prevLives + 1);
           } else if (soalSaatIni.level === "hard") {
-            setAsk((prevAsk) => prevAsk + 0.5);
-            setLives((prevLives) => prevLives + 0.5);
+            setAsk((prevAsk) => prevAsk + 1);
+            setLives((prevLives) => prevLives + 1);
           }
 
           return 0; // reset setelah strike
