@@ -190,7 +190,13 @@ export default function Page() {
   const isAnswered = selectedAnswers[soal.nomor] !== undefined;
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-pink-50 p-6 font-[Poppins] relative">
+    <div
+      className="flex flex-col items-center min-h-screen p-6 relative"
+      style={{
+        backgroundColor: "#F4F4F4",
+        fontFamily: "Satoshi, sans-serif",
+      }}
+    >
       {/* Header Profil Pengguna */}
       <div className="flex items-center justify-between w-full max-w-3xl mb-6">
         <div className="flex items-center space-x-4">
@@ -204,7 +210,7 @@ export default function Page() {
           <div>
             <h1 className="text-xl font-semibold text-gray-800">
               👋 Semangat,{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-pink-500 bg-clip-text text-transparent font-bold">
+              <span className="bg-gradient-to-r from-blue-400 to-pink-400 bg-clip-text text-transparent font-bold">
                 {namaSamaran}
               </span>
               !
@@ -219,17 +225,17 @@ export default function Page() {
       {/* Kartu Soal */}
       <div className="relative flex-1 max-w-2xl w-full bg-white/70 backdrop-blur-md p-6 rounded-2xl border border-white/30 shadow-xl">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">
+          <h2 className="text-lg font-semibold text-gray-500">
             Soal {currentIndex + 1}
           </h2>
           {!showScore && (
             <div className="flex justify-end gap-2">
-              <div className="px-4 py-2 bg-indigo-500 text-white rounded-xl shadow text-sm font-bold">
+              <div className="px-4 py-2 bg-indigo-300 text-gray-700 rounded-xl shadow text-sm font-bold">
                 ⏱ {formatTime(timeLeft)}
               </div>
               <button
                 onClick={handleHint}
-                className="px-3 py-1 text-lg bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl font-semibold text-xs shadow"
+                className="px-3 py-1 text-lg bg-yellow-200 hover:bg-yellow-500 text-gray-600 rounded-xl font-semibold text-xs shadow"
               >
                 💡 Hint
               </button>
@@ -249,7 +255,7 @@ export default function Page() {
         )}
 
         {/* Teks Soal */}
-        <div className="p-3 text-black text-justify rounded-xl mb-4 bg-white/60">
+        <div className="p-3 text-gray-800 text-justify rounded-xl mb-4 bg-white/60">
           <LatexRenderer text={soal.soal} />
         </div>
 
@@ -270,7 +276,7 @@ export default function Page() {
           return (
             <label
               key={pilihan}
-              className={`flex items-center gap-2 m-2 p-3 text-black rounded-xl cursor-pointer transition-all duration-200 ${bgColor}`}
+              className={`flex items-center gap-2 m-2 p-3 text-gray-700 rounded-xl cursor-pointer transition-all duration-200 ${bgColor}`}
             >
               <input
                 type="radio"
@@ -295,7 +301,7 @@ export default function Page() {
                 handleAutoSubmit();
               }
             }}
-            className="absolute bottom-4 right-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-semibold text-sm shadow transition-all duration-200"
+            className="absolute bottom-4 right-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-500 rounded-xl font-semibold text-sm shadow transition-all duration-200"
           >
             ⏭ Skip
           </button>
@@ -307,7 +313,7 @@ export default function Page() {
             <button
               onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
               disabled={currentIndex === 0}
-              className="px-4 py-2 rounded-xl bg-gray-300 text-black font-semibold disabled:opacity-50 shadow"
+              className="px-4 py-2 rounded-xl bg-gray-300 text-gray-700 font-semibold disabled:opacity-50 shadow"
             >
               ⬅ Back
             </button>
@@ -316,7 +322,7 @@ export default function Page() {
                 setCurrentIndex((i) => Math.min(data.length - 1, i + 1))
               }
               disabled={currentIndex === data.length - 1}
-              className="px-4 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-semibold shadow disabled:opacity-50"
+              className="px-4 py-2 rounded-xl bg-indigo-300 hover:bg-indigo-600 text-white font-semibold shadow disabled:opacity-50"
             >
               Next ➡
             </button>
