@@ -278,12 +278,12 @@ export default function Page() {
         )}
 
         {/* TEKS SOAL */}
-        <div className="mb-4 text-lg text-justify text-gray-800">
+        <div className="mb-4 text-lg text-justify text-gray-700">
           <LatexRenderer text={soal.soal} />
         </div>
 
         {/* PILIHAN */}
-        <div className="space-y-3 text-gray-800">
+        <div className="space-y-3 text-gray-700">
           {["A", "B", "C", "D", "E"].map((p) => (
             <label
               key={p}
@@ -305,7 +305,13 @@ export default function Page() {
       {/* POPUP HINT */}
       {showHint && (
         <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
-          <div className="bg-white p-5 rounded-xl shadow-xl w-72 text-center animate-fadeIn">
+          <div
+            className=" p-5 rounded-xl shadow-xl w-72 text-center animate-fadeIn"
+            style={{
+              backgroundColor: "#F4F4F4",
+              fontFamily: "Satoshi, sans-serif",
+            }}
+          >
             <h3 className="font-bold text-lg mb-2 text-purple-400">Hint</h3>
             <p className="text-gray-700 text-sm mb-4">
               <LatexRenderer text={soal.hint} />
@@ -324,7 +330,7 @@ export default function Page() {
       {showWinPopup && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-2xl shadow-2xl w-96 max-h-[80vh] overflow-y-auto animate-fadeIn text-center">
-            <h2 className="text-3xl font-extrabold text-purple-700 mb-3 drop-shadow">
+            <h2 className="text-3xl font-extrabold text-purple-600 mb-3 drop-shadow">
               🏆 YOU WIN!
             </h2>
 
