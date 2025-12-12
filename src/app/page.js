@@ -76,7 +76,13 @@ export default function LoginPage() {
 
   // --- RENDER ---
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-pink-50 text-gray-700 overflow-hidden">
+    <div
+      className="relative min-h-screen flex items-center justify-center text-gray-700 overflow-hidden"
+      style={{
+        backgroundColor: "#F4F4F4",
+        fontFamily: "Satoshi, sans-serif",
+      }}
+    >
       {/* Efek partikel lembut */}
       <div className="absolute inset-0 bg-[radial-gradient(#dbeafe,transparent_1px)] [background-size:16px_16px] opacity-50 animate-[pulse_6s_infinite]" />
       {loading ? (
@@ -88,14 +94,18 @@ export default function LoginPage() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative z-10 w-[90%] max-w-md m-5 p-8 backdrop-blur-xl bg-white/80 border border-white/60 rounded-3xl shadow-[0_0_25px_rgba(147,197,253,0.4)]"
+            className="relative z-10 w-[90%] max-w-md m-5 p-8 backdrop-blur-xl border border-white/60 rounded-3xl shadow-[0_0_25px_rgba(147,197,253,0.4)]"
+            style={{ backgroundColor: "#F4F4F4" }}
           >
-            <div className="flex justify-end">
-              <img src="logo_tulip_192x192.png" alt="" className="w-20 h-20" />
-
-              <h2 className="text-2xl font-extrabold text-center mb-6 tracking-tight bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Welcome to The Arena
+            <div className="flex justify-between">
+              <h2 className="text-3xl mt-4 font-extrabold text-center mb-6 tracking-tight bg-gradient-to-r from-blue-500 via-purple-200 to-pink-400 bg-clip-text text-transparent">
+                Login
               </h2>
+              <img
+                src="logo_tulip_192x192.png"
+                alt=""
+                className="w-20 h-20 rounded-full"
+              />
             </div>
 
             {/* Avatar Preview */}
@@ -117,24 +127,35 @@ export default function LoginPage() {
             {/* Form Login */}
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Input Nama Samaran */}
-              <div>
-                <label className="block mb-1 font-semibold text-pink-600">
-                  Nama Samaranjaya
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-500">
+                  Nama Samaran
                 </label>
                 <input
                   type="text"
                   name="namaSamaran"
                   value={form.namaSamaran}
                   onChange={handleChange}
-                  placeholder="Masukkan nama samaran..."
+                  placeholder="Masukkan nama samaran"
                   required
-                  className="w-full px-4 py-2 bg-white/60 border border-pink-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-700 placeholder-gray-400"
+                  className="
+      w-full 
+      px-2 py-2 
+      bg-transparent
+      border-b 
+      border-gray-300 
+      focus:border-gray-600 
+      focus:outline-none 
+      transition-all 
+      text-gray-700 
+      placeholder-gray-400
+    "
                 />
               </div>
 
               {/* Input Kode Rahasia */}
-              <div>
-                <label className="block mb-1 font-semibold text-purple-600">
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-500">
                   Kode Rahasia
                 </label>
                 <input
@@ -142,9 +163,20 @@ export default function LoginPage() {
                   name="kode"
                   value={form.kode}
                   onChange={handleChange}
-                  placeholder="Masukkan kode rahasia..."
+                  placeholder="Masukkan kode"
                   required
-                  className="w-full px-4 py-2 bg-white/60 border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-700 placeholder-gray-400"
+                  className="
+      w-full 
+      px-2 py-2
+      bg-transparent
+      border-b 
+      border-gray-300 
+      focus:border-gray-600
+      focus:outline-none
+      transition-all
+      text-gray-700
+      placeholder-gray-400
+    "
                 />
               </div>
 
@@ -159,22 +191,15 @@ export default function LoginPage() {
               <motion.button
                 whileHover={{
                   scale: 1.05,
-                  boxShadow: "0 0 20px rgba(147,197,253,0.6)",
+                  boxShadow: "0 0 20px rgba(200,200,200,0.6)",
                 }}
                 whileTap={{ scale: 0.95 }}
                 type="submit"
-                className="relative w-full py-3 font-bold text-white rounded-xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-300"
+                className="relative w-full py-3 font-bold text-gray-700 rounded-xl bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 transition-all duration-300"
               >
-                🚀 Enter The Arena
+                Login
               </motion.button>
             </form>
-
-            <p
-              className="text-center mt-6 text-sm text-gray-500 hover:cursor-pointer"
-              onClick={() => router.push("/signup")}
-            >
-              💡 Belum punya akun? silahkan klik disini.
-            </p>
           </motion.div>
         </div>
       )}
