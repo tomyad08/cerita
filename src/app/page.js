@@ -119,7 +119,7 @@ export default function LoginPage() {
               {/* Input Nama Samaran */}
               <div>
                 <label className="block mb-1 font-semibold text-pink-600">
-                  Nama Samaran
+                  Nama Samaranjaya
                 </label>
                 <input
                   type="text"
