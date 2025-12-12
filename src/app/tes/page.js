@@ -12,7 +12,7 @@ export default function Page() {
   const [showHint, setShowHint] = useState(false);
   const [showWinPopup, setShowWinPopup] = useState(false);
   const [data, setData] = useState([]);
-  const [lives, setLives] = useState(15);
+  const [lives, setLives] = useState(10);
   const [ask, setAsk] = useState(7);
   const [gameOver, setGameOver] = useState(false);
   const [reviewSoal, setReviewSoal] = useState(null);
@@ -189,7 +189,13 @@ export default function Page() {
   const scorePercent = Math.round((score / data.length) * 100);
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-blue-200 via-pink-100 to-purple-200 p-5 md:p-10 flex flex-col items-center">
+    <div
+      className="relative min-h-screen p-5 md:p-10 flex flex-col items-center"
+      style={{
+        backgroundColor: "#F4F4F4",
+        fontFamily: "Satoshi, sans-serif",
+      }}
+    >
       {/* HEADER */}
       <div className="w-full flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
@@ -201,18 +207,18 @@ export default function Page() {
             />
           )}
           <div>
-            <p className="text-gray-600 text-sm">Welcome back,</p>
-            <h2 className="font-extrabold text-xl text-purple-700 tracking-wide drop-shadow">
+            <p className="text-gray-400 text-sm">Welcome back,</p>
+            <h2 className="font-extrabold text-xl text-purple-400 tracking-wide drop-shadow">
               {nickname}
             </h2>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="bg-sky-600 text-white font-bold px-3 py-1 rounded-xl text-sm shadow-lg">
+          <div className="bg-sky-300 text-white font-bold px-3 py-1 rounded-xl text-sm shadow-lg">
             ⏱ {formatTime(timeLeft)}
           </div>
-          <div className="flex bg-purple-500 text-white font-bold px-3 py-1 rounded-xl text-sm shadow-lg animate-pulse">
+          <div className="flex bg-purple-300 text-white font-bold px-3 py-1 rounded-xl text-sm shadow-lg">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -227,21 +233,21 @@ export default function Page() {
             {ask}
           </div>
 
-          <div className="bg-red-500 text-white font-bold px-3 py-1 rounded-xl text-sm shadow-lg animate-pulse">
+          <div className="bg-red-400 text-white font-bold px-3 py-1 rounded-xl text-sm shadow-lg">
             ❤️ {lives}
           </div>
         </div>
       </div>
 
       {/* KARTU SOAL */}
-      <div className="bg-white/80 backdrop-blur-lg w-full md:w-3/4 rounded-2xl shadow-2xl p-6 md:p-8 border border-white/40">
+      <div className="bg-white/60 backdrop-blur-lg w-full md:w-3/4 rounded-2xl shadow-2xl p-6 md:p-8 border border-white/40">
         <div className="flex justify-between items-center mb-3">
-          <h1 className="font-bold text-2xl drop-shadow text-purple-700">
+          <h1 className="font-bold text-2xl drop-shadow text-purple-400">
             Soal {soal.nomor}
           </h1>
 
           <div className="flex gap-2">
-            <div className="border px-3 text-black py-1 rounded-xl text-sm">
+            <div className="border-b-1 px-3 text-gray-600 py-1 text-sm">
               {soal.level}
             </div>
 
@@ -254,7 +260,7 @@ export default function Page() {
                   return Math.max(newAsk, 0);
                 });
               }}
-              className="px-3 py-1 bg-yellow-300 text-gray-700 rounded-lg shadow-md hover:scale-105 transition"
+              className="px-3 py-1 bg-yellow-200 text-gray-700 rounded-lg shadow-md hover:scale-105 transition"
             >
               💡 Hint
             </button>
@@ -300,13 +306,13 @@ export default function Page() {
       {showHint && (
         <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
           <div className="bg-white p-5 rounded-xl shadow-xl w-72 text-center animate-fadeIn">
-            <h3 className="font-bold text-lg mb-2 text-purple-700">Hint</h3>
+            <h3 className="font-bold text-lg mb-2 text-purple-400">Hint</h3>
             <p className="text-gray-700 text-sm mb-4">
               <LatexRenderer text={soal.hint} />
             </p>
             <button
               onClick={() => setShowHint(false)}
-              className="w-full bg-yellow-300 p-2 rounded-lg"
+              className="w-full text-gray-700 bg-yellow-200 p-2 rounded-lg"
             >
               Tutup
             </button>
