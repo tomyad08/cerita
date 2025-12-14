@@ -7,14 +7,15 @@ exports.dataBab = [
   },
   {
     id: 2,
-    bab: "Analisis Argumen",
+    bab: "Analisis Teks dan Argumen",
     keterangan:
-      "Menguji kemampuan untuk membanding, mengklasifikasi, dan memilih asumsi paling relevan.",
+      "Menguji kemampuan untuk , menganalisis, membanding, mengklasifikasi, dan memilih asumsi paling relevan.",
   },
   {
     id: 3,
-    bab: "Pola Bilangan",
-    keterangan: "Menguji kemampuan untuk melihat pola dari susunan angka.",
+    bab: "Pola Bilangan, Huruf, dan Operasi Bilangan",
+    keterangan:
+      "Menguji kemampuan untuk melihat pola dari susunan angka, huruf, dan operasi matematika.",
   },
   // {
   //   id: 4,
