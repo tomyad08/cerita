@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(30 * 60);
+  const [timeLeft, setTimeLeft] = useState(20 * 60);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [showWinPopup, setShowWinPopup] = useState(false);
