@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(20 * 60);
+  const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [showWinPopup, setShowWinPopup] = useState(false);
@@ -53,6 +53,9 @@ export default function Page() {
 
   // Timer
   useEffect(() => {
+    if (timeLeft === 0 && !gameOver) {
+      setGameOver(true);
+    }
     if (timeLeft <= 0 || gameOver) return;
     const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearInterval(timer);
@@ -158,7 +161,7 @@ export default function Page() {
   if (gameOver) {
     return (
       <div className="fixed inset-0 bg-black/60 flex justify-center items-center text-center">
-        <div className="bg-white p-6 rounded-2xl shadow-2xl w-80 animate-bounce">
+        <div className="bg-white p-6 rounded-2xl shadow-2xl w-80">
           <h2 className="text-3xl font-extrabold text-red-600 mb-3">
             💀 GAME OVER!
           </h2>
