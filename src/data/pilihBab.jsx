@@ -17,10 +17,9 @@ exports.dataBab = [
     keterangan:
       "Menguji kemampuan untuk melihat pola dari susunan angka, huruf, dan operasi matematika.",
   },
-  // {
-  //   id: 4,
-  //   bab: "Kriptogram",
-  //   keterangan:
-  //     "Menguji kemampuan untuk melihat kode dari suatu pola kalimat dan angka.",
-  // },
+  {
+    id: 4,
+    bab: "Perbandingan",
+    keterangan: "Membandingkan atau mengurutkan suatu kondisi atau nilai.",
+  },
 ];
