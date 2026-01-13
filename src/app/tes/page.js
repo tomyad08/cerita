@@ -446,7 +446,7 @@ export default function Page() {
               <div className="animate-confetti absolute w-full h-full"></div>
             </div>
 
-            <h1 className="text-5xl font-extrabold text-white drop-shadow-lg mb-3">
+            <h1 className="text-3xl font-extrabold text-white drop-shadow-lg mb-3">
               🎉 STRIKE!!! 🎉
             </h1>
 
