@@ -22,4 +22,10 @@ exports.dataBab = [
     bab: "Perbandingan",
     keterangan: "Membandingkan atau mengurutkan suatu kondisi atau nilai.",
   },
+  {
+    id: 5,
+    bab: "Himpunan",
+    keterangan:
+      "Mengelompokkan berdasarkan kesamaan anggota dan menyimpulkannya dalam bentuk diagram venn ataupun teks.",
+  },
 ];
