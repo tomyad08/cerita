@@ -8,7 +8,7 @@ import { dataBab } from "@/data/pilihBab";
 
 export default function BabListPage() {
   const [search, setSearch] = useState("");
-  const [data, setData] = useState([]);
+  const [activeBab, setActiveBab] = useState(null);
   // const [loading, setLoading] = useState(true);
   const [namaSamaran, setNamaSamaran] = useState("");
   const [avatar, setAvatar] = useState(null);
@@ -48,7 +48,7 @@ export default function BabListPage() {
             nama,
             total,
             avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(
-              nama
+              nama,
             )}`,
           }))
           .sort((a, b) => b.total - a.total);
@@ -67,7 +67,7 @@ export default function BabListPage() {
   }, []);
 
   const filteredData = dataBab.filter((value) =>
-    value.bab.toLowerCase().includes(search.toLowerCase())
+    value.bab.toLowerCase().includes(search.toLowerCase()),
   );
 
   const handleSelection = (babIsSelected) => {
@@ -193,10 +193,10 @@ export default function BabListPage() {
                   rank === 1
                     ? "🥇"
                     : rank === 2
-                    ? "🥈"
-                    : rank === 3
-                    ? "🥉"
-                    : "";
+                      ? "🥈"
+                      : rank === 3
+                        ? "🥉"
+                        : "";
 
                 return (
                   <motion.div
@@ -259,16 +259,98 @@ export default function BabListPage() {
 
         {/* Daftar Bab */}
         <div className="space-y-4">
-          {filteredData.map((value) => (
-            <div
-              className="border-b-2 dropshadow-xl p-5 rounded-xl"
-              key={value.id}
-              onClick={() => handleSelection(value.bab)}
-            >
-              <h1 className="font-bold text-2xl text-gray-600">{value.bab}</h1>
-              <p className="text-sm text-gray-400">{value.keterangan}</p>
-            </div>
-          ))}
+          {filteredData.map((value) => {
+            const isActive = activeBab === value.id;
+
+            return (
+              <motion.div
+                key={value.id}
+                layout
+                onClick={() => setActiveBab(isActive ? null : value.id)}
+                className="border-b-2 dropshadow-xl p-5 rounded-xl cursor-pointer bg-white/70 hover:shadow-md transition-all"
+              >
+                <h1 className="font-bold text-2xl text-gray-600">
+                  {value.bab}
+                </h1>
+                <p className="text-sm text-gray-400">{value.keterangan}</p>
+
+                <AnimatePresence>
+                  {isActive && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      transition={{ duration: 0.2 }}
+                      // className="flex justify-end gap-2 mt-3"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <p className="text-sm text-red-300">
+                        Jika ingin mereview materi, berikut adalah rekomendasi
+                        video youtube yang bisa kamu tonton:
+                      </p>
+                      <div className="text-gray-700 text-sm font-semibold flex justify-start gap-1 my-1">
+                        <div className="columns-2">
+                          <button
+                            className="py-2 px-3 rounded-xl bg-yellow-100 my-1"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(value.youtube_1, "_blank");
+                            }}
+                          >
+                            {value.judul_1}
+                          </button>
+                          <button
+                            className="pb-2 px-3 rounded-xl bg-yellow-100 my-1"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(value.youtube_2, "_blank");
+                            }}
+                          >
+                            {value.judul_2}
+                          </button>
+                          <button
+                            className="py-2 px-3 rounded-xl bg-yellow-100 my-1"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(value.youtube_3, "_blank");
+                            }}
+                          >
+                            {value.judul_3}
+                          </button>
+                          <button
+                            className="py-2 px-3 rounded-xl bg-yellow-100 my-1"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(value.youtube_4, "_blank");
+                            }}
+                          >
+                            {value.judul_4}
+                          </button>
+                          <button
+                            className="py-2 px-3 rounded-xl bg-yellow-100 my-1"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(value.youtube_5, "_blank");
+                            }}
+                          >
+                            {value.judul_5}
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => handleSelection(value.bab)}
+                          className="bg-red-100 text-sm py-2 px-4 text-gray-800 rounded-xl drop-shadow-sm"
+                        >
+                          Test
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
         </div>
       </motion.div>
     </div>
