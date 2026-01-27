@@ -83,8 +83,7 @@ exports.dataBab = [
     judul_3: "Diagram Venn",
     judul_4: "Aplikasi di PU",
     judul_5: "",
-    youtube_1:
-      "https://www.youtube.com/watch?v=nfKKPFOOIHA&list=PLPtbHTXes2LPnITvrZvQ_yR5FnY6TTFiU&index=35",
+    youtube_1: "https://www.youtube.com/watch?v=2r4LeDpqonU",
     youtube_2:
       "https://www.youtube.com/watch?v=l_BhpZyGoQg&list=PLPtbHTXes2LPnITvrZvQ_yR5FnY6TTFiU&index=36",
     youtube_3:
