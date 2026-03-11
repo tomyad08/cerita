@@ -128,7 +128,7 @@ export default function BabListPage() {
         </div>
 
         {/* Tombol Pushrank */}
-        <div className="flex justify-end mb-8 relative">
+        <div className="flex justify-end gap-2 mb-8 relative">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -326,6 +326,16 @@ export default function BabListPage() {
               </motion.div>
             );
           })}
+        </div>
+        <div className="flex justify-center my-5">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push("/pilihan_paket")}
+            className="bg-gradient-to-r w-full from-blue-400 to-red-500 font-bold text-gray-300 px-5 py-2 rounded-xl shadow-md hover:shadow-lg transition-all"
+          >
+            GASS REAL SNBT!!!
+          </motion.button>
         </div>
       </motion.div>
     </div>
