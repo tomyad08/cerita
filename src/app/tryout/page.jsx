@@ -13,7 +13,7 @@ export default function TryoutPage() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [flagged, setFlagged] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(1 * 60);
+  const [timeLeft, setTimeLeft] = useState(30 * 60);
   const [showResult, setShowResult] = useState(false);
   const [nickname, setNickname] = useState("");
 
