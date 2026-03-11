@@ -13,7 +13,7 @@ export default function TryoutPage() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [flagged, setFlagged] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(30 * 60);
+  const [timeLeft, setTimeLeft] = useState(1 * 60);
   const [showResult, setShowResult] = useState(false);
   const [nickname, setNickname] = useState("");
 
@@ -141,6 +141,10 @@ export default function TryoutPage() {
   const kosong = data.length - Object.keys(selectedAnswers).length;
 
   const isAllAnswered = Object.keys(selectedAnswers).length === data.length;
+  const handleHome = () => {
+    sessionStorage.removeItem("TRYOUT_NORMAL");
+    router.push("/list-bab");
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 p-8 text-slate-800">
@@ -255,7 +259,7 @@ export default function TryoutPage() {
             </p>
 
             <button
-              onClick={() => router.push("/list-bab")}
+              onClick={() => handleHome()}
               className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white w-full py-2 rounded-md"
             >
               Kembali ke Home
