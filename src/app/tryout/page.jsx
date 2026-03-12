@@ -119,7 +119,7 @@ export default function TryoutPage() {
 
     const fd = new FormData();
     fd.append("nama_samaran", nickname);
-    fd.append("nilai", score);
+    fd.append("nilai", score * 40);
 
     await fetch(listLink.NILAI, {
       method: "POST",
@@ -136,9 +136,19 @@ export default function TryoutPage() {
   const score = calculateScore();
   const progress = (Object.keys(selectedAnswers).length / data.length) * 100;
 
+  const score_number = score * 40;
   const benar = score;
   const salah = data.length - score;
   const kosong = data.length - Object.keys(selectedAnswers).length;
+
+  // const fd = new FormData();
+  //   fd.append("nama_samaran", namaSamaran);
+  //   fd.append("nilai", totalSkor);
+
+  //   await fetch(listLink.NILAI, {
+  //     method: "POST",
+  //     body: fd,
+  //   });
 
   const isAllAnswered = Object.keys(selectedAnswers).length === data.length;
   const handleHome = () => {
@@ -248,15 +258,13 @@ export default function TryoutPage() {
       {showResult && (
         <div className="fixed m-5 inset-0 bg-black/50 flex justify-center items-center">
           <div className="bg-white p-8 rounded-xl shadow-xl w-96">
-            <h2 className="text-xl font-semibold mb-4">Hasil Tryout</h2>
-
-            <p>Benar: {benar}</p>
-            <p>Salah: {salah}</p>
-            <p>Kosong: {kosong}</p>
-
-            <p className="mt-3 font-semibold text-indigo-600">
-              Skor: {score} / {data.length}
-            </p>
+            <h2 className="text-sm font-semibold mb-4">Hasil Tryout</h2>
+            <h1 className="text-4xl font-semibold text-center">
+              {score_number}
+            </h1>
+            <p className="text-sm">Benar: {benar}</p>
+            <p className="text-sm">Salah: {salah}</p>
+            <p className="text-sm">Kosong: {kosong}</p>
 
             <button
               onClick={() => handleHome()}
