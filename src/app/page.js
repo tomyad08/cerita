@@ -40,8 +40,8 @@ export default function LoginPage() {
     if (form.namaSamaran) {
       setAvatar(
         `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(
-          form.namaSamaran
-        )}`
+          form.namaSamaran,
+        )}`,
       );
     }
   }, [form.namaSamaran]);
@@ -58,7 +58,7 @@ export default function LoginPage() {
     const user = siswa.find(
       (value) =>
         form.namaSamaran === value.nama_samaran &&
-        form.kode === String(value.kode)
+        form.kode === String(value.kode),
     );
 
     if (user) {
@@ -101,6 +101,7 @@ export default function LoginPage() {
               <h2 className="text-3xl mt-4 font-extrabold text-center mb-6 tracking-tight bg-gradient-to-r from-blue-500 via-purple-200 to-pink-400 bg-clip-text text-transparent">
                 Login
               </h2>
+
               <img
                 src="logo_tulip_192x192.png"
                 alt=""

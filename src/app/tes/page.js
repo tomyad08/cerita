@@ -7,13 +7,13 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(25 * 60);
+  const [timeLeft, setTimeLeft] = useState(15 * 60);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [showWinPopup, setShowWinPopup] = useState(false);
   const [data, setData] = useState([]);
-  const [lives, setLives] = useState(10);
-  const [ask, setAsk] = useState(7);
+  const [lives, setLives] = useState(3);
+  const [ask, setAsk] = useState(5);
   const [gameOver, setGameOver] = useState(false);
   const [reviewSoal, setReviewSoal] = useState(null);
   const [strikeCount, setStrikeCount] = useState(0);
@@ -190,6 +190,8 @@ export default function Page() {
   const soal = data[currentIndex];
   const score = calculateScore();
   const scorePercent = Math.round((score / data.length) * 100);
+  const answeredCount = Object.keys(selectedAnswers).length;
+  const progress = Math.round((answeredCount / data.length) * 100);
 
   return (
     <div
@@ -242,11 +244,26 @@ export default function Page() {
         </div>
       </div>
 
+      {/* PROGRESS BAR */}
+      <div className="w-full md:w-3/4 mb-4">
+        <div className="flex justify-between text-sm font-semibold text-gray-600 mb-1">
+          <span>Progress</span>
+          <span>{progress}%</span>
+        </div>
+
+        <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden shadow-inner">
+          <div
+            className="h-full bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-500 ease-out"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+      </div>
+
       {/* KARTU SOAL */}
       <div className="bg-white/60 backdrop-blur-lg w-full md:w-3/4 rounded-2xl shadow-2xl p-6 md:p-8 border border-white/40">
         <div className="flex justify-between items-center mb-3">
           <h1 className="font-bold text-2xl drop-shadow text-purple-400">
-            Soal {soal.nomor}
+            Soal {currentIndex + 1}
           </h1>
 
           <div className="flex gap-2">
@@ -403,8 +420,8 @@ export default function Page() {
                               isCorrect
                                 ? "bg-green-100 border-green-500"
                                 : isUser
-                                ? "bg-red-100 border-red-500"
-                                : "bg-gray-50"
+                                  ? "bg-red-100 border-red-500"
+                                  : "bg-gray-50"
                             }`}
                           >
                             <strong>{p}.</strong>{" "}
